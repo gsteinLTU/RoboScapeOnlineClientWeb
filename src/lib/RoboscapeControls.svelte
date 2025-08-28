@@ -35,7 +35,6 @@ function callFnIfReady(name: string) {
 
 function handleNew() { callFnIfReady('new_sim_menu'); }
 function handleJoin() { callFnIfReady('join_sim_menu'); }
-function handleShow3D() { callFnIfReady('show_3d_view'); }
 function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
 </script>
 
@@ -45,7 +44,6 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
         <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
             <button on:click={handleNew} class="inset">New simulation...</button>
             <button on:click={handleJoin} class="inset">Join room...</button>
-            <button on:click={handleShow3D} class="inset">Show 3D View</button>
             <button on:click={handleResetCamera} class="inset">Reset Camera</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px;border-top:1px solid rgba(0,0,0,0.06);">
@@ -61,3 +59,23 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
     </div>
 </div>
 {/if}
+
+<style>
+    .inset {
+        padding: 4px 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .inset:hover {
+        background: #f0f0f0;
+        cursor: pointer;
+    }
+
+    .inset:active {
+        background: #e0e0e0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+</style>

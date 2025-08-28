@@ -63,6 +63,7 @@
 
 	// Controls component is extracted to a separate file
 	import RoboscapeControls from '$lib/RoboscapeControls.svelte';
+	import RoboscapeScene from '$lib/RoboscapeScene.svelte';
 
 	onMount(async () => {
 		try {
@@ -96,73 +97,8 @@
 					if (dialogEl) {
 						dialogEl.style.width = '400px';
 						dialogEl.style.height = '400px';
-						const canvas = document.createElement('canvas');
-						canvas.id = 'roboscape-canvas';
-						canvas.style.flex = '1 1 auto';
-						canvas.style.overflow = 'hidden';
-						if (contentEl) {
-							contentEl.style.display = 'flex';
-							(contentEl.style as any)['flex-flow'] = 'column';
-							(contentEl.style as any)['justify-content'] = 'flex-end';
-							contentEl.appendChild(canvas);
-							win.setupDialog(dialogEl);
-							win.externalVariables['roboscapedialog'] = dialogEl;
-
-							const buttonbar = document.createElement('div');
-							buttonbar.id = 'roboscapebuttonbar';
-							buttonbar.style.flex = '0 1';
-							contentEl.appendChild(buttonbar);
-
-							const robotmenu_label = document.createElement('label');
-							robotmenu_label.innerText = 'Robot ID:';
-							buttonbar.appendChild(robotmenu_label);
-							const robotmenu = document.createElement('select');
-							robotmenu.className = 'inset';
-							robotmenu.onpointerdown = (e: Event) => { e.stopPropagation(); (window.disableDrag || disableDrag)(); };
-							const nonchoice = document.createElement('option');
-							robotmenu.appendChild(nonchoice);
-							buttonbar.appendChild(robotmenu);
-							win.externalVariables['roboscapedialog-robotmenu'] = robotmenu;
-						}
-					}
-				}
-
-				// Create join dialog for later use
-				{
-					const joinList = document.createElement('datalist');
-					joinList.id = 'roboscapedialog-join-rooms-list';
-					document.body.appendChild(joinList);
-					win.externalVariables['roboscapedialog-join-rooms-list'] = joinList;
-
-					const { dialogEl: joinDialog, contentEl: joinContent } = safeCreateDialog('Join a Session', false, ['Join', 'Close']);
-					if (joinDialog && joinContent) {
-						joinContent.appendChild(createLabeledInput('Room ID:', { listId: 'roboscapedialog-join-rooms-list', cls: 'inset' }));
-						joinContent.appendChild(createLabeledInput('Password:', { cls: 'inset', type: 'password' }));
-					}
-					win.setupDialog(joinDialog, false);
-					win.externalVariables['roboscapedialog-join'] = joinDialog;
-
-					const newEnvsList = document.createElement('datalist');
-					newEnvsList.id = 'roboscapedialog-new-environments-list';
-					document.body.appendChild(newEnvsList);
-					win.externalVariables['roboscapedialog-new-environments-list'] = newEnvsList;
-
-					const { dialogEl: newDialog, contentEl: newContent } = safeCreateDialog('Create a Session', false, ['Create', 'Edit Mode', 'Close']);
-					if (newDialog && newContent) {
-						newContent.appendChild(createLabeledInput('Environment:', { listId: 'roboscapedialog-new-environments-list', id: 'roboscapedialog-new-environment', cls: 'inset' }));
-						newContent.appendChild(createLabeledInput('Password:', { id: 'roboscapedialog-new-password', cls: 'inset', type: 'password' }));
-					}
-					win.setupDialog(newDialog, false);
-					win.externalVariables['roboscapedialog-new'] = newDialog;
-				}
-				
-
-				// Create 3D view dialog for later use
-				{
-					const { dialogEl, contentEl } = safeCreateDialog('RoboScape Online');
-					if (dialogEl) {
-						dialogEl.style.width = '400px';
-						dialogEl.style.height = '400px';
+						dialogEl.style.display = 'none';
+						dialogEl.classList.add('dialog-noshow')
 						const canvas = document.createElement('canvas');
 						canvas.id = 'roboscape-canvas';
 						canvas.style.flex = '1 1 auto';
@@ -285,20 +221,28 @@
 </svelte:head>
 
 <RoboscapeControls />
+<div class="w-full h-full">
+	<RoboscapeScene />
+</div>
 
-	<div id="scene-root" style="width:100%;height:100%;">
-	<canvas id="roboscape-canvas"></canvas>
-	</div>
-
-	<!-- Hidden element so the #roboscapebuttonbar selector is considered used by Svelte -->
-	<div style="display:none;">
-		<div id="roboscapebuttonbar"></div>
-	</div>
+<!-- Hidden element so the #roboscapebuttonbar selector is considered used by Svelte -->
+<div style="display:none;">
+	<div id="roboscapebuttonbar"></div>
+</div>
 
 	
 
 <style>
 	:global(#roboscapebuttonbar *) {
 		margin: auto 5px;
+	}
+
+	:global(dialog.pseudo-morphic header) {
+		height: auto;
+		width: calc(100% + 32px);
+	}
+
+	:global(.dialog-noshow) {
+		display: none !important;
 	}
 </style>
