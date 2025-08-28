@@ -17,7 +17,7 @@
 		font-family: monospace;
 		font-size: 14px;
 		position: absolute;
-		top: 10px;
+		bottom: 10px;
 		left: 50%;
 		transform: translateX(-50%);
 		z-index: 1000;

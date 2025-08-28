@@ -1,6 +1,7 @@
 <script lang="ts">
 import { browser } from '$app/environment';
 import { onMount } from 'svelte';
+    import { roomId } from './roboscapeStore';
 
 let beepsEnabled = true;
 let idBillboardsEnabled = true;
@@ -39,29 +40,31 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
 </script>
 
 {#if browser}
-<div id="roboscape-controls" style="position:fixed;right:12px;top:12px;background:rgba(255,255,255,0.9);border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:999;">
-    <div style="display:flex;flex-direction:column;gap:8px;min-width:160px;">
-        <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
-            <button on:click={handleNew} class="inset">New simulation...</button>
-            <button on:click={handleJoin} class="inset">Join room...</button>
-            <button on:click={handleResetCamera} class="inset">Reset Camera</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px;border-top:1px solid rgba(0,0,0,0.06);">
-            <label style="display:flex;align-items:center;gap:8px;">
-                <input type="checkbox" bind:checked={beepsEnabled} on:change={toggleBeeps} />
-                Beeps Enabled
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;">
-                <input type="checkbox" bind:checked={idBillboardsEnabled} on:change={toggleBillboards} />
-                Robot ID Billboards
-            </label>
+    <div id="roboscape-controls" style="position:fixed;right:12px;top:12px;background:rgba(255,255,255,0.9);border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:999;">
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:160px;">
+            <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+                <button on:click={handleNew} class="inset">New simulation...</button>
+                <button on:click={handleJoin} class="inset">Join room...</button>
+                <button on:click={handleResetCamera} class="inset">Reset Camera</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px;border-top:1px solid rgba(0,0,0,0.06);">
+                <label style="display:flex;align-items:center;gap:8px;">
+                    <input type="checkbox" bind:checked={beepsEnabled} on:change={toggleBeeps} />
+                    Beeps Enabled
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;">
+                    <input type="checkbox" bind:checked={idBillboardsEnabled} on:change={toggleBillboards} />
+                    Robot ID Billboards
+                </label>
+            </div>
         </div>
     </div>
-</div>
+    <div id="roboscapebuttonbar" style="display:{$roomId ? 'block' : 'none'};">
+    </div>
 {/if}
 
 <style>
-    .inset {
+    .inset, :global(#roboscapebuttonbar button) {
         padding: 4px 8px;
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 4px;
@@ -69,13 +72,24 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .inset:hover {
+    .inset:hover, :global(#roboscapebuttonbar button:hover) {
         background: #f0f0f0;
         cursor: pointer;
     }
 
-    .inset:active {
+    .inset:active, :global(#roboscapebuttonbar button:active) {
         background: #e0e0e0;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    } 
+
+    :global(#roboscapebuttonbar) {
+        position: fixed;
+        left: 12px;
+        bottom: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        padding: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 999;
     }
 </style>
