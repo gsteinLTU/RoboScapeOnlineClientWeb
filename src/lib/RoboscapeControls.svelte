@@ -61,7 +61,3 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
     </div>
 </div>
 {/if}
-
-<style>
-/* small local styling can live here if needed later */
-</style>

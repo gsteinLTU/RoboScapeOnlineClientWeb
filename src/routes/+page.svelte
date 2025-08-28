@@ -86,6 +86,10 @@
 				const win = window as any;
 				win.externalVariables = win.externalVariables || {};
 
+				// Mock Snap! IDE
+				win.world = {};
+				win.world.children = [{'cloud': {}}];
+
 				// Create 3D view dialog for later use
 				{
 					const { dialogEl, contentEl } = safeCreateDialog('RoboScape Online');
@@ -290,6 +294,8 @@
 	<div style="display:none;">
 		<div id="roboscapebuttonbar"></div>
 	</div>
+
+	
 
 <style>
 	:global(#roboscapebuttonbar *) {
