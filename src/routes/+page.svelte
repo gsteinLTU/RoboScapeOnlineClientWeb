@@ -115,21 +115,6 @@
 							win.setupDialog(dialogEl);
 							win.externalVariables['roboscapedialog'] = dialogEl;
 
-							const buttonbar = document.createElement('div');
-							buttonbar.id = 'roboscapebuttonbar';
-							buttonbar.style.flex = '0 1';
-							contentEl.appendChild(buttonbar);
-
-							const robotmenu_label = document.createElement('label');
-							robotmenu_label.innerText = 'Robot ID:';
-							buttonbar.appendChild(robotmenu_label);
-							const robotmenu = document.createElement('select');
-							robotmenu.className = 'inset';
-							robotmenu.onpointerdown = (e: Event) => { e.stopPropagation(); (window.disableDrag || disableDrag)(); };
-							const nonchoice = document.createElement('option');
-							robotmenu.appendChild(nonchoice);
-							buttonbar.appendChild(robotmenu);
-							win.externalVariables['roboscapedialog-robotmenu'] = robotmenu;
 						}
 					}
 				}
@@ -249,8 +234,8 @@
 	}
 
 	:global(dialog.pseudo-morphic header) {
-		height: auto;
-		width: calc(100% + 32px);
+		height: auto !important;
+		width: calc(100% + 32px) !important;
 	}
 
 	:global(.dialog-noshow) {

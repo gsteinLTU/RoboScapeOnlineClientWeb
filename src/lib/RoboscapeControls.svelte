@@ -5,6 +5,7 @@ import { onMount } from 'svelte';
 
 let beepsEnabled = true;
 let idBillboardsEnabled = true;
+let robotMenu: HTMLSelectElement;
 
 onMount(() => {
     if (!browser) return;
@@ -14,7 +15,22 @@ onMount(() => {
         const ib = localStorage.getItem('roboscape_id_billboards');
         if (ib !== null) idBillboardsEnabled = ib === 'true';
     } catch {}
+
+    // Make robot menu available to external scripts
+    if (typeof window !== 'undefined') {
+        const win = window as any;
+        win.externalVariables = win.externalVariables || {};
+        // The robot menu will be available after the component mounts
+        // We'll set it up in a reactive statement or after mount
+    }
 });
+
+// Store robot menu reference for external scripts
+$: if (robotMenu && typeof window !== 'undefined') {
+    const win = window as any;
+    win.externalVariables = win.externalVariables || {};
+    win.externalVariables['roboscapedialog-robotmenu'] = robotMenu;
+}
 
 function toggleBeeps() {
     try { localStorage.setItem('roboscape_beep', beepsEnabled ? 'true' : 'false'); } catch {}
@@ -37,6 +53,13 @@ function callFnIfReady(name: string) {
 function handleNew() { callFnIfReady('new_sim_menu'); }
 function handleJoin() { callFnIfReady('join_sim_menu'); }
 function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
+
+function handleRobotMenuPointerDown(e: Event) {
+    e.stopPropagation();
+    if (typeof window !== 'undefined' && (window as any).disableDrag) {
+        (window as any).disableDrag();
+    }
+}
 </script>
 
 {#if browser}
@@ -60,6 +83,12 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
         </div>
     </div>
     <div id="roboscapebuttonbar" style="display:{$roomId ? 'block' : 'none'};">
+        <label>
+            Selected Robot:
+            <select class="inset" on:pointerdown={handleRobotMenuPointerDown} bind:this={robotMenu}>
+                <option></option>
+            </select>
+        </label>
     </div>
 {/if}
 
@@ -85,7 +114,8 @@ function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
     :global(#roboscapebuttonbar) {
         position: fixed;
         left: 12px;
-        bottom: 12px;
+        top: 12px;
+        max-width: 40vw;
         background: rgba(255, 255, 255, 0.9);
         border-radius: 8px;
         padding: 8px;
