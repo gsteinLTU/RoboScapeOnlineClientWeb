@@ -64,6 +64,10 @@
 	// Controls component is extracted to a separate file
 	import RoboscapeControls from '$lib/RoboscapeControls.svelte';
 	import RoboscapeScene from '$lib/RoboscapeScene.svelte';
+	import RoomIdDisplay from '$lib/RoomIdDisplay.svelte';
+
+	// Store for reactive room ID
+	import { updateRoomIdFromWindow, exposeRoomNotifier, startRoomPoll } from '$lib/roboscapeStore';
 
 	onMount(async () => {
 		try {
@@ -206,6 +210,11 @@
 					room_id,
 					show_3d_view
 				};
+
+				// Set up reactive room ID polling
+				updateRoomIdFromWindow();
+				exposeRoomNotifier();
+				startRoomPoll(1000); // poll every 1s
 			} catch (e) {
 				console.error('Failed to load roboscapesim_client', e);
 			}
@@ -219,6 +228,8 @@
 <svelte:head>
     <link rel="stylesheet" href="https://pseudomorphic.netsblox.org/style.css">
 </svelte:head>
+
+<RoomIdDisplay />
 
 <RoboscapeControls />
 <div class="w-full h-full">
