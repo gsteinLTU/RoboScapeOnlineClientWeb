@@ -5,7 +5,7 @@ import { onMount } from 'svelte';
 
 let beepsEnabled = true;
 let idBillboardsEnabled = true;
-let robotMenu: HTMLSelectElement;
+let robotMenu: HTMLSelectElement | null = null;
 
 onMount(() => {
     if (!browser) return;
@@ -50,6 +50,21 @@ function callFnIfReady(name: string) {
     }
 }
 
+function copyRobotId() {
+    if(browser){
+        const selectedOption = robotMenu?.selectedOptions[0];
+        if (selectedOption) {
+            navigator.clipboard.writeText(selectedOption.value)
+                .then(() => {
+                    console.log(`Copied robot ID: ${selectedOption.value}`);
+                })
+                .catch(err => {
+                    console.error('Failed to copy robot ID: ', err);
+                });
+        }
+    }
+}
+
 function handleNew() { callFnIfReady('new_sim_menu'); }
 function handleJoin() { callFnIfReady('join_sim_menu'); }
 function handleResetCamera() { callFnIfReady('reset_camera_menu'); }
@@ -89,6 +104,9 @@ function handleRobotMenuPointerDown(e: Event) {
                 <option></option>
             </select>
         </label>
+        <button class="inset" on:click={copyRobotId}>
+            Copy ID
+        </button>
     </div>
 {/if}
 
